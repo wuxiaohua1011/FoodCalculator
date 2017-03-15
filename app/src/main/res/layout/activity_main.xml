@@ -16,5 +16,34 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"></LinearLayout>
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:text="Da Food App"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/activity_main_textview_title"
+            android:textAlignment="center" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/activity_main_edittext_entry"
+            android:hint="Please enter a food name" />
+
+        <Button
+            android:text="Search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/activity_main_button_search" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/activity_main_framelayout_food_result">
+
+        </FrameLayout>
+    </LinearLayout>
 </RelativeLayout>
