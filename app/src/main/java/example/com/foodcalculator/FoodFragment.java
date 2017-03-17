@@ -20,13 +20,15 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import static example.com.foodcalculator.MainActivity.foodEntry;
+
 /**
  * Created by micha on 3/15/2017.
  */
 
 public class FoodFragment extends ListFragment{
     private List<Food> foodList;
-    private String entry = MainActivity.foodEntry;
+    private String entry = foodEntry;
     private String TAG = "FoodFragment";
     private FoodAdapter adapter;
     @Override
@@ -41,11 +43,11 @@ public class FoodFragment extends ListFragment{
     }
 
     private void populate() {
-        Food food = new Food("S1","S1","S1",1);
+        Food food = new Food("S1","NoFoodFound","S1",1);
         foodList.add(food);
         String fullUrl = "https://api.nal.usda.gov/ndb/search/?" +
                 "format=json&" +
-                "q=butter&" +
+                "q=" + foodEntry+"&" +
                 "sort=n&" +
                 "max=25&" +
                 "offset=0&" +

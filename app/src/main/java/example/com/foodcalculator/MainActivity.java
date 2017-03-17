@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextEntry;
     private Button buttonSearch;
     public static String foodEntry;
+    private FrameLayout frameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
                     fm.beginTransaction()
                             .add(R.id.activity_main_framelayout_food_result, new FoodFragment(), "FoodFragment")
                             .commit();
+                else{
+                    frameLayout.removeAllViewsInLayout();
+
+                    fm.beginTransaction()
+                            .add(R.id.activity_main_framelayout_food_result, new FoodFragment(), "FoodFragment")
+                            .commit();
+                }
 
             }
         });
@@ -40,5 +48,6 @@ public class MainActivity extends AppCompatActivity {
         textViewTitle = (TextView)findViewById(R.id.activity_main_textview_title);
         editTextEntry = (EditText)findViewById(R.id.activity_main_edittext_entry);
         buttonSearch = (Button)findViewById(R.id.activity_main_button_search);
+        frameLayout =(FrameLayout)findViewById(R.id.activity_main_framelayout_food_result);
     }
 }
