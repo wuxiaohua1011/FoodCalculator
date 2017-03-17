@@ -1,8 +1,5 @@
 package example.com.foodcalculator;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import java.util.ArrayList;
 
 public class FindNutrients {
@@ -24,6 +21,6 @@ public class FindNutrients {
 
     public ArrayList<String> findAllNutrientId(){
 
-        return
+        return  null;
     }
 }

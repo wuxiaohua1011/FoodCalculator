@@ -2,9 +2,7 @@ package example.com.foodcalculator;
 
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.AsyncTask;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,8 +62,11 @@ public class FoodAdapter extends ArrayAdapter<Food> {
         // https://api.nal.usda.gov/ndb/reports/?ndbno=01009&type=b&format=json&api_key=DEMO_KEY
         String baseURLf = "https://api.nal.usda.gov/ndb/reports/?ndbno=";
         String baseURLl = "&type=b&format=json&api_key=hFBevPIX4DbhPChcLwunQaqoUfPYwHGQxrRQlqQj";
-        String finalURL = baseURLf+ food.getNdbno() + baseURLl;
+        //TODO: Remember to change back to pulling nbdno
+        //String finalURL = baseURLf+ food.getNdbno() + baseURLl;
 
+        String finalURL = baseURLf+ "01009"+ baseURLl;
+        Log.d(TAG, "findAllNutrientId: "+ finalURL);
         new NutrientSearch().execute(finalURL);
         return nutrientIdList;
     }
@@ -100,27 +101,16 @@ public class FoodAdapter extends ArrayAdapter<Food> {
 
                 JSONObject jsonObject = new JSONObject(jsonString);
 
-                if (jsonObject != null) {
-                    for (int i = 0; i < jsonObject.optJSONObject("re").optJSONArray("item").length(); i++) {
+                JSONArray nutrientArray = jsonObject.optJSONObject("report").optJSONObject("item").optJSONArray("nutrients");
 
+                if (jsonObject != null) {
+                    for (int i = 0; i < nutrientArray.length(); i++) {
+                        Log.d(TAG, "doInBackground: "+ nutrientArray.optJSONObject(i).optString("nutrient_id"));
                     }
                 }
 
 
-                JSONArray jsonArray = jsonObject.optJSONObject("list").optJSONArray("item");
 
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    Food food = new Food();
-                    JSONObject tempJsonObject = jsonArray.optJSONObject(i);
-                    food.setGroup(tempJsonObject.optString("group"));
-                    food.setName(tempJsonObject.optString("name"));
-                    food.setNdbno(tempJsonObject.optString("ndbno"));
-                    food.setOffset(tempJsonObject.optInt("offset"));
-                    Log.d("Food: ", food.getOffset() + "");
-                    foodList.add(i, food);
-                }
-
-                adapter.notifyDataSetChanged();
 
             } catch (Exception e) {
                 e.printStackTrace();
