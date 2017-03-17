@@ -25,7 +25,7 @@ public class FoodAdapter extends ArrayAdapter<Food>{
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.food_adapter, null);
         }
-        Food food = getItem(position);
+       final Food food = getItem(position);
         TextView textViewNum = (TextView)convertView.findViewById(R.id.food_adapter_textview_item_number);
         TextView textViewName = (TextView)convertView.findViewById(R.id.food_adapter_textview_foodname);
 
@@ -36,6 +36,7 @@ public class FoodAdapter extends ArrayAdapter<Food>{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(),Nutrient.class);
+                intent.putExtra("nbdno",food.getNdbno());
                 getContext().startActivity(intent);
             }
         });
