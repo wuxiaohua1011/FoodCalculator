@@ -1,7 +1,9 @@
 package example.com.foodcalculator;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
@@ -22,7 +24,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 /**
  * Created by micha on 3/15/2017.
@@ -33,13 +38,15 @@ public class FoodAdapter extends ArrayAdapter<Food> {
     public FoodAdapter(Context context, List<Food> objects) {
         super(context, 0, objects);
     }
+     Food food;
+    ProgressDialog progressDialog;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.food_adapter, null);
         }
-        final Food food = getItem(position);
+        food = getItem(position);
         TextView textViewNum = (TextView) convertView.findViewById(R.id.food_adapter_textview_item_number);
         TextView textViewName = (TextView) convertView.findViewById(R.id.food_adapter_textview_foodname);
 
@@ -49,29 +56,24 @@ public class FoodAdapter extends ArrayAdapter<Food> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String baseURLf = "https://api.nal.usda.gov/ndb/reports/?ndbno=";
+                String baseURLl = "&type=b&format=json&api_key=hFBevPIX4DbhPChcLwunQaqoUfPYwHGQxrRQlqQj";
+                String finalURL = baseURLf+ food.getNdbno() + baseURLl;
 
-                Intent intent = new Intent(getContext(), DisplayNutrients.class);
 
-                //getContext().startActivity(intent);//do last
+                new NutrientIdSearch().execute(finalURL);
+
+
             }
         });
         return convertView;
     }
 
-    public ArrayList<String> findAllNutrientId(String nbdno, Food food) {
-        ArrayList<String> nutrientIdList = nutrientIdList = new ArrayList<>();
-
-        // https://api.nal.usda.gov/ndb/reports/?ndbno=01009&type=b&format=json&api_key=DEMO_KEY
-        String baseURLf = "https://api.nal.usda.gov/ndb/reports/?ndbno=";
-        String baseURLl = "&type=b&format=json&api_key=hFBevPIX4DbhPChcLwunQaqoUfPYwHGQxrRQlqQj";
-        String finalURL = baseURLf+ food.getNdbno() + baseURLl;
-
-        new NutrientSearch().execute(finalURL);
-        return nutrientIdList;
-    }
-
-
-    private class NutrientSearch extends AsyncTask<String, Void, String> {
+    private class NutrientIdSearch extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPostExecute(String s) {
+            getContext().startActivity(new Intent(getContext(),DisplayNutrients.class));
+        }
 
         @Override
         protected String doInBackground(String... urls) {
@@ -93,39 +95,28 @@ public class FoodAdapter extends ArrayAdapter<Food> {
                     e.printStackTrace();
                     Log.e(TAG, "onCreate: IT CRASHED BECAUSE FILE NOT FOUND");
                 }
-
-                Log.d(TAG, "doInBackground: " + jsonString);
                 //All Data is in jsonString at this point
                 // start casting data into JsonObject
 
                 JSONObject jsonObject = new JSONObject(jsonString);
 
+                JSONArray jsonArray = jsonObject.optJSONObject("report").optJSONObject("food").optJSONArray("nutrients");
+                List<String> nutrientIdList = new ArrayList<>();
                 if (jsonObject != null) {
-                    for (int i = 0; i < jsonObject.optJSONObject("re").optJSONArray("item").length(); i++) {
-
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject tempJsonObject = jsonArray.optJSONObject(i);
+                        nutrientIdList.add(i,tempJsonObject.optString("nutrient_id"));
                     }
                 }
 
-
-                JSONArray jsonArray = jsonObject.optJSONObject("list").optJSONArray("item");
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    Food food = new Food();
-                    JSONObject tempJsonObject = jsonArray.optJSONObject(i);
-                    food.setGroup(tempJsonObject.optString("group"));
-                    food.setName(tempJsonObject.optString("name"));
-                    food.setNdbno(tempJsonObject.optString("ndbno"));
-                    food.setOffset(tempJsonObject.optInt("offset"));
-                    Log.d("Food: ", food.getOffset() + "");
-                    foodList.add(i, food);
-                }
-
-                adapter.notifyDataSetChanged();
-
+                Set<String> temp = new HashSet<String>(nutrientIdList);
+                SharedPreferences.Editor editor = getContext().getApplicationContext().getSharedPreferences("nutrientIdList",Context.MODE_PRIVATE).edit();
+                editor.putStringSet("nutrientIdList", temp);
+                editor.putString("ndbno",food.getNdbno());
+                editor.apply();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return null;
         }
     }

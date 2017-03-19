@@ -18,7 +18,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".FindNutrients" />
-        <activity android:name=".DisplayNutrients"></activity>
+        <activity android:name=".DisplayNutrients" />
+        <activity android:name=".NutrientFragment" />
+        <activity android:name=".NutrientAdapter"></activity>
     </application>
 
 </manifest>

@@ -77,21 +77,10 @@ public class FoodFragment extends ListFragment{
                     e.printStackTrace();
                     Log.e(TAG, "onCreate: IT CRASHED BECAUSE FILE NOT FOUND");
                 }
-
-                Log.d(TAG, "doInBackground: "+ jsonString);
                 //All Data is in jsonString at this point
                 // start casting data into JsonObject
 
                 JSONObject jsonObject= new JSONObject(jsonString);
-
-                if( jsonObject!= null) {
-                    for(int i =0; i<jsonObject.optJSONObject("list").optJSONArray("item").length(); i++) {
-                        Log.d(TAG, "onCreate: " + jsonObject.optJSONObject("list").optJSONArray("item").optJSONObject(i).optString("name"));
-                        Log.d(TAG, "onCreate: " + jsonObject.optJSONObject("list").optJSONArray("item").optJSONObject(i).optInt("ndbno"));
-                        Log.d(TAG, "onCreate: " + jsonObject.optJSONObject("list").optJSONArray("item").optJSONObject(i).optString("group"));
-                    }
-                }
-
 
                 JSONArray jsonArray = jsonObject.optJSONObject("list").optJSONArray("item");
 
@@ -102,7 +91,6 @@ public class FoodFragment extends ListFragment{
                     food.setName(tempJsonObject.optString("name"));
                     food.setNdbno(tempJsonObject.optString("ndbno"));
                     food.setOffset(tempJsonObject.optInt("offset"));
-                    Log.d("Food: ", food.getOffset()+"");
                     foodList.add(i,food);
                 }
 
