@@ -50,7 +50,7 @@ public class FoodFragment extends ListFragment{
                 "sort=n&" +
                 "max=25&" +
                 "offset=0&" +
-                "api_key=hFBevPIX4DbhPChcLwunQaqoUfPYwHGQxrRQlqQj ";
+                "api_key=hFBevPIX4DbhPChcLwunQaqoUfPYwHGQxrRQlqQj";
        new FoodSearch().execute(fullUrl);
     }
 

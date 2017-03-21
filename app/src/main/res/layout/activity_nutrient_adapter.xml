@@ -53,12 +53,6 @@
                 android:id="@+id/activity_nutrient_adapter_textview_value"
                 android:layout_weight="1" />
 
-            <TextView
-                android:text="Unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/activity_nutrient_adapter_textview_unit"
-                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 
