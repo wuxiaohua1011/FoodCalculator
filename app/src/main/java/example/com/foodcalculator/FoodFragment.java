@@ -37,14 +37,13 @@ public class FoodFragment extends ListFragment{
         foodList = new ArrayList<>();
         populate();
 
-        adapter = new FoodAdapter(getActivity(),foodList);
-        setListAdapter(adapter);
+
         return rootView;
     }
 
     private void populate() {
-        Food food = new Food("S1","NoFoodFound","S1",1);
-        foodList.add(food);
+//        Food food = new Food("S1","NoFoodFound","S1",1);
+//        foodList.add(food);
         String fullUrl = "https://api.nal.usda.gov/ndb/search/?" +
                 "format=json&" +
                 "q=" + foodEntry+"&" +
@@ -56,6 +55,11 @@ public class FoodFragment extends ListFragment{
     }
 
     private class FoodSearch extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPostExecute(String s) {
+            adapter = new FoodAdapter(getActivity(),foodList);
+            setListAdapter(adapter);
+        }
 
         @Override
         protected String doInBackground(String... urls) {
@@ -81,21 +85,29 @@ public class FoodFragment extends ListFragment{
                 // start casting data into JsonObject
 
                 JSONObject jsonObject= new JSONObject(jsonString);
-
-                JSONArray jsonArray = jsonObject.optJSONObject("list").optJSONArray("item");
-
-                for (int i = 0; i < jsonArray.length(); i ++){
-                    Food food = new Food();
-                    JSONObject tempJsonObject = jsonArray.optJSONObject(i);
-                    food.setGroup(tempJsonObject.optString("group"));
-                    food.setName(tempJsonObject.optString("name"));
-                    food.setNdbno(tempJsonObject.optString("ndbno"));
-                    food.setOffset(tempJsonObject.optInt("offset"));
-                    foodList.add(i,food);
+               // Log.d(TAG, "doInBackground: "+(jsonObject.optJSONObject("errors").optJSONArray("error").optJSONObject(0).optString("status")));
+                if (jsonObject.optJSONObject("errors") != null)
+                {
+                    Food food = new Food("S1","NoFoodFound","S1",1);
+                    foodList.add(food);
+///                    adapter.notifyDataSetChanged();
                 }
 
-                adapter.notifyDataSetChanged();
+                else {
+                    JSONArray jsonArray = jsonObject.optJSONObject("list").optJSONArray("item");
 
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        Food food = new Food();
+                        JSONObject tempJsonObject = jsonArray.optJSONObject(i);
+                        food.setGroup(tempJsonObject.optString("group"));
+                        food.setName(tempJsonObject.optString("name"));
+                        food.setNdbno(tempJsonObject.optString("ndbno"));
+                        food.setOffset(tempJsonObject.optInt("offset"));
+                        foodList.add(i, food);
+                    }
+
+                   // adapter.notifyDataSetChanged();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
