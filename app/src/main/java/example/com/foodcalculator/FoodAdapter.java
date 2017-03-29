@@ -4,9 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.os.AsyncTask;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,7 +115,10 @@ public class FoodAdapter extends ArrayAdapter<Food> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            //Todo add food name and amount here
             return null;
         }
+
     }
 }

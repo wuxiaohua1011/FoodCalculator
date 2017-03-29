@@ -1,11 +1,9 @@
 package example.com.foodcalculator;
 
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v4.app.ListFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,7 +89,12 @@ public class NutrientFragment extends ListFragment {
 
                 JSONObject jsonObject = new JSONObject(jsonString);
                 JSONArray jsonArray = jsonObject.optJSONObject("report").optJSONArray("foods").optJSONObject(0).optJSONArray("nutrients");
-
+                String jsonFoodName = jsonObject.optJSONObject("report").optJSONArray("foods").optJSONObject(0).optString("name");
+                String jsonFoodMeasure = jsonObject.optJSONObject("report").optJSONArray("foods").optJSONObject(0).optString("measure");
+                SharedPreferences.Editor editor = getContext().getApplicationContext().getSharedPreferences("FoodName",MODE_PRIVATE).edit();
+                editor.putString("jsonFoodName", jsonFoodName);
+                editor.putString("jsonFoodMeasure", jsonFoodMeasure);
+                editor.commit();
                 for (int i = 0; i < jsonArray.length(); i ++){
                     Nutrient nutrient = new Nutrient();
                     nutrient.setNutrient_id( jsonArray.optJSONObject(i).optString("nutrient_id"));

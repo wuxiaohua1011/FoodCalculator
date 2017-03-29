@@ -16,6 +16,7 @@ public class Nutrient {
         this.unit = unit;
         this.value = value;
         this.gm = gm;
+
     }
 
     public String getNutrient_id() {
@@ -57,4 +58,6 @@ public class Nutrient {
     public void setGm(String gm) {
         this.gm = gm;
     }
+
+
 }
